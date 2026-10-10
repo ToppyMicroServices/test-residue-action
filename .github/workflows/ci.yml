@@ -1,0 +1,41 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.14']
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Unit and Linux integration tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Exercise composite Action
+        uses: ./
+        with:
+          command-json: '["python3", "tests/fixture.py", "clean"]'
+      - name: Exercise expected residue failure
+        id: negative
+        continue-on-error: true
+        uses: ./
+        with:
+          command-json: '["python3", "tests/fixture.py", "file"]'
+      - name: Require negative detection
+        env:
+          OUTCOME: ${{ steps.negative.outcome }}
+          RESIDUE: ${{ steps.negative.outputs.residue }}
+          OBSERVATION: ${{ steps.negative.outputs.observation }}
+        run: |
+          test "$OUTCOME" = failure
+          test "$RESIDUE" = found
+          test "$OBSERVATION" = complete

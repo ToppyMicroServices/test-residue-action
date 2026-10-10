@@ -1,0 +1,36 @@
+name: Test Residue Check
+description: Run one command and report leftover descendant processes, TCP listeners, and opt-in scratch files on Linux.
+author: ToppyMicroServices
+branding:
+  icon: search
+  color: blue
+inputs:
+  command-json:
+    description: Command as a JSON array of strings; no implicit shell expansion.
+    required: true
+  timeout-seconds:
+    description: Maximum time for the main command before bounded shutdown.
+    default: '300'
+  grace-seconds:
+    description: Time to allow descendants to finish after the main command exits.
+    default: '0.5'
+outputs:
+  report-path:
+    description: Absolute path to the JSON report on this runner.
+    value: ${{ steps.observe.outputs.report-path }}
+  residue:
+    description: found, none_observed, or unknown.
+    value: ${{ steps.observe.outputs.residue }}
+  observation:
+    description: complete or incomplete; incomplete never passes.
+    value: ${{ steps.observe.outputs.observation }}
+runs:
+  using: composite
+  steps:
+    - id: observe
+      shell: bash
+      env:
+        TR_COMMAND_JSON: ${{ inputs.command-json }}
+        TR_TIMEOUT: ${{ inputs.timeout-seconds }}
+        TR_GRACE: ${{ inputs.grace-seconds }}
+      run: python3 "$GITHUB_ACTION_PATH/action_runner.py"
