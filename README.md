@@ -6,7 +6,7 @@ Run one command and check what it leaves behind: descendant processes, their TCP
 listeners, and files in an opt-in scratch directory. Get a JSON result that a CI
 job or coding agent can act on without writing another process-cleanup script.
 
-**Prototype, not yet published.** Linux only, Python 3.11+, with `/proc`, subreaper
+**Experimental; no Marketplace release yet.** Linux only, Python 3.11+, with `/proc`, subreaper
 and pidfd support. No Docker, root, model API key, or third-party Python packages
 are required by the detector. See [limitations](docs/limitations.md) before use.
 
@@ -26,13 +26,14 @@ files are never overwritten.
 
 ## GitHub Action
 
-For now, check out this prototype inside your repository as
-`.github/actions/test-residue`, then add a step after checking out your project:
+After checking out your project and installing its test dependencies, add this
+step. This example pins the prototype to an immutable commit; there is no `v1`
+release tag yet.
 
 ```yaml
 - name: Run tests and check residue
   id: residue
-  uses: ./.github/actions/test-residue
+  uses: ToppyMicroServices/test-residue-action@29eba833c158c3c7aa53a50324dec9da01d44a71
   with:
     command-json: '["npm", "test"]'
     timeout-seconds: '300'
