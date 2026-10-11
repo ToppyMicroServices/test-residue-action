@@ -39,5 +39,20 @@ A dedicated Colima VM failed to start because the host ran out of disk space.
 The newly created failed VM and its newly downloaded image were removed; existing
 VM profiles were unchanged. This is an environment failure, not a runtime test.
 
-The configured CI matrix targets Ubuntu 24.04 with Python 3.11 and 3.14. A committed
-workflow is not evidence that the jobs have run or passed.
+## GitHub-hosted CI
+
+The public repository is
+[ToppyMicroServices/test-residue-action](https://github.com/ToppyMicroServices/test-residue-action).
+[CI run 38099470804](https://github.com/ToppyMicroServices/test-residue-action/actions/runs/38099470804)
+passed on Ubuntu 24.04 for commit
+`c7d8a06a05792de2eb00e82c5805fb746ff066a9`:
+
+- Python 3.11: all 39 tests passed, none skipped.
+- Python 3.14: all 39 tests passed, none skipped.
+- On both versions, the composite Action passed a clean workload. A workload
+  leaving a scratch file failed as expected, with `residue=found` and
+  `observation=complete`. A separate step asserted that failure and both outputs.
+
+[CodeQL run 38099474838](https://github.com/ToppyMicroServices/test-residue-action/actions/runs/38099474838)
+also completed successfully. These results do not confer a Marketplace verified
+creator badge. No Marketplace release has been published.

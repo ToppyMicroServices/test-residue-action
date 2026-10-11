@@ -33,7 +33,7 @@ release tag yet.
 ```yaml
 - name: Run tests and check residue
   id: residue
-  uses: ToppyMicroServices/test-residue-action@29eba833c158c3c7aa53a50324dec9da01d44a71
+  uses: ToppyMicroServices/test-residue-action@c7d8a06a05792de2eb00e82c5805fb746ff066a9
   with:
     command-json: '["npm", "test"]'
     timeout-seconds: '300'
